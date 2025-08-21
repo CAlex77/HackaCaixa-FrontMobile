@@ -1,0 +1,58 @@
+{
+  "produtos": [
+    {
+      "id": "1",
+      "nome": "Crédito Pessoal",
+      "taxaJurosAnual": 24.9,
+      "prazoMaximoMeses": 48
+    },
+    {
+      "id": "2",
+      "nome": "Consignado",
+      "taxaJurosAnual": 18.5,
+      "prazoMaximoMeses": 72
+    },
+    {
+      "id": "3",
+      "nome": "Crédito Veicular",
+      "taxaJurosAnual": 22.1,
+      "prazoMaximoMeses": 60
+    },
+    {
+      "id": "4",
+      "nome": "Home Equity",
+      "taxaJurosAnual": 16.9,
+      "prazoMaximoMeses": 180
+    },
+    {
+      "id": "9af0",
+      "nome": "teste",
+      "taxaJurosAnual": 43,
+      "prazoMaximoMeses": 43
+    },
+    {
+      "id": "9560",
+      "nome": "teste",
+      "taxaJurosAnual": 43,
+      "prazoMaximoMeses": 43
+    },
+    {
+      "id": "e4b9",
+      "nome": "teste",
+      "taxaJurosAnual": 43,
+      "prazoMaximoMeses": 43
+    },
+    {
+      "id": "a458",
+      "nome": "Credito",
+      "taxaJurosAnual": 54,
+      "prazoMaximoMeses": 89
+    },
+    {
+      "id": "6fdc",
+      "nome": "teste",
+      "taxaJurosAnual": 453,
+      "prazoMaximoMeses": 65
+    }
+  ]
+}
