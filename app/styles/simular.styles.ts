@@ -1,19 +1,34 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 import type { AppTheme } from "@/src/context/ThemeContext";
+
+const { height: H } = Dimensions.get("window");
 
 export const getSimularStyles = (theme: AppTheme) =>
   StyleSheet.create({
     safe: { flex: 1, backgroundColor: theme === "dark" ? "#000" : "#fff" },
-    container: {
-      flex: 1,
+
+    // Área rolável principal
+    scrollContainer: {
       padding: 16,
+      paddingBottom: 24, // espaço p/ teclado / barras
+    },
+
+    container: {
       width: "100%",
       maxWidth: 900,
       alignSelf: "center",
       gap: 12,
+      flexGrow: 1,
     },
-    // 🔻 área flexível para o resultado (abaixo do formulário)
-    resultArea: { flex: 1 },
+
+    center: { alignItems: "center", justifyContent: "center", flex: 1 },
+    loadingTxt: {
+      color: theme === "dark" ? "#fff" : "#000",
+      marginTop: 8,
+    },
+
+    // 🔻 área flexível para o resultado
+    resultArea: { flexGrow: 1, gap: 10 },
 
     title: {
       fontSize: 20,
@@ -50,10 +65,11 @@ export const getSimularStyles = (theme: AppTheme) =>
       alignItems: "center",
       backgroundColor: "#0a84ff",
     },
+    btnSecondary: { backgroundColor: "#444" },
     btnTxt: { color: "#fff", fontWeight: "700", fontSize: 16 },
     error: { color: "#ff5a5f", fontSize: 12, fontWeight: "600" },
 
-    // card “normal” (autoaltura)
+    // Cards
     card: {
       borderRadius: 12,
       borderWidth: 1,
@@ -61,15 +77,14 @@ export const getSimularStyles = (theme: AppTheme) =>
       backgroundColor: theme === "dark" ? "#111" : "#fafafa",
       padding: 12,
     },
-    // 🔻 card que vai conter a FlatList rolável
     cardScrollable: {
-      flex: 1, // dá altura para a lista rolar
+      minHeight: 160,
+      maxHeight: H * 0.45, // impede ficar gigante em telas menores
       borderRadius: 12,
       borderWidth: 1,
       borderColor: theme === "dark" ? "#333" : "#e5e5e5",
       backgroundColor: theme === "dark" ? "#111" : "#fafafa",
       padding: 12,
-      minHeight: 160, // ajuda em telas pequenas
     },
 
     cardTitle: {
@@ -98,34 +113,65 @@ export const getSimularStyles = (theme: AppTheme) =>
     },
     itemTxt: { color: theme === "dark" ? "#ddd" : "#333" },
 
+    pageControls: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginTop: 8,
+      gap: 12,
+    },
+    pageIndicator: {
+      color: theme === "dark" ? "#fff" : "#000",
+      fontWeight: "600",
+    },
+
+    // Modal
     modalScrim: {
       ...StyleSheet.absoluteFillObject,
-      backgroundColor: "rgba(0,0,0,0.4)",
+      backgroundColor: "rgba(0,0,0,0.45)",
       justifyContent: "center",
       alignItems: "center",
+      padding: 12,
     },
     modalBox: {
-      width: "90%",
+      width: "100%",
       maxWidth: 420,
+      maxHeight: H * 0.6, // <= controla altura da janela
       borderRadius: 12,
       padding: 12,
       backgroundColor: theme === "dark" ? "#111" : "#fff",
       borderWidth: 1,
       borderColor: theme === "dark" ? "#333" : "#e5e5e5",
+      overflow: "hidden", // garante clip da lista
+      gap: 8,
+    },
+    modalHeader: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 4,
+    },
+    modalTitle: {
+      fontWeight: "700",
+      fontSize: 16,
+      color: theme === "dark" ? "#fff" : "#000",
+    },
+    modalList: {
+      flexGrow: 0, // não tenta ocupar infinito
+      maxHeight: H * 0.7, // lista rola dentro do modal
     },
     modalItem: {
       paddingVertical: 12,
       borderBottomWidth: 1,
       borderBottomColor: theme === "dark" ? "#222" : "#eee",
+      paddingHorizontal: 4,
     },
     modalItemTxt: { color: theme === "dark" ? "#fff" : "#000" },
     close: {
-      alignSelf: "flex-end",
       paddingHorizontal: 10,
       paddingVertical: 6,
       borderRadius: 8,
       backgroundColor: theme === "dark" ? "#222" : "#eee",
-      marginBottom: 8,
     },
     closeTxt: { color: theme === "dark" ? "#fff" : "#000", fontWeight: "600" },
   });

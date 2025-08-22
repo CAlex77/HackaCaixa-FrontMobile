@@ -7,6 +7,9 @@ import {
   Pressable,
   ActivityIndicator,
   FlatList,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { useThemeCtx } from "@/src/context/ThemeContext";
 import { getSimularStyles } from "../styles/simular.styles";
@@ -32,8 +35,8 @@ export default function Simulacao() {
 
   // Form
   const [produtoSel, setProdutoSel] = useState<Produto | null>(null);
-  const [valor, setValor] = useState<string>(""); // ex.: "10000"
-  const [meses, setMeses] = useState<string>(""); // ex.: "12"
+  const [valor, setValor] = useState<string>("");
+  const [meses, setMeses] = useState<string>("");
 
   // Modal simples de seleção (inline)
   const [abrirModal, setAbrirModal] = useState(false);
@@ -83,7 +86,7 @@ export default function Simulacao() {
     }
     const v = Number(valor.replace(/\./g, "").replace(",", "."));
     const m = Number(meses);
-    const i = annualToMonthly(produtoSel!.taxaJurosAnual); // efetiva mensal
+    const i = annualToMonthly(produtoSel!.taxaJurosAnual);
     const { parcela, totalComJuros, schedule } = gerarMemoria(v, i, m);
 
     setResultado({
@@ -92,7 +95,7 @@ export default function Simulacao() {
       total: totalComJuros,
       schedule,
     });
-    setPage(1); // reset da paginação a cada nova simulação
+    setPage(1);
   }
 
   const totalPages = useMemo(
@@ -112,21 +115,9 @@ export default function Simulacao() {
   if (loadingProdutos) {
     return (
       <SafeAreaView style={styles.safe}>
-        <View
-          style={[
-            styles.container,
-            { alignItems: "center", justifyContent: "center" },
-          ]}
-        >
+        <View style={[styles.container, styles.center]}>
           <ActivityIndicator />
-          <Text
-            style={{
-              color: theme === "dark" ? "#fff" : "#000",
-              marginTop: 8,
-            }}
-          >
-            Carregando produtos...
-          </Text>
+          <Text style={styles.loadingTxt}>Carregando produtos...</Text>
         </View>
       </SafeAreaView>
     );
@@ -145,170 +136,183 @@ export default function Simulacao() {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Simular Empréstimo</Text>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        style={{ flex: 1 }}
+      >
+        {/* Scroll geral para telas pequenas */}
+        <ScrollView
+          style={{ flex: 1 }}
+          contentContainerStyle={styles.scrollContainer}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.container}>
+            <Text style={styles.title}>Simular Empréstimo</Text>
 
-        {/* Seleção de produto */}
-        <Text style={styles.label}>Produto</Text>
-        <Pressable style={styles.select} onPress={() => setAbrirModal(true)}>
-          <Text style={styles.selectText}>
-            {produtoSel
-              ? `${produtoSel.nome} • ${produtoSel.taxaJurosAnual}% a.a. • até ${produtoSel.prazoMaximoMeses}m`
-              : "Selecionar produto"}
-          </Text>
-        </Pressable>
-
-        {/* Valor e Meses */}
-        <View style={styles.row}>
-          <View style={styles.col}>
-            <Text style={styles.label}>Valor (R$)</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Ex.: 10.000"
-              placeholderTextColor={theme === "dark" ? "#777" : "#999"}
-              value={valor}
-              onChangeText={(t) => setValor(t.replace(/[^0-9.,]/g, ""))}
-              keyboardType="decimal-pad"
-            />
-          </View>
-          <View style={styles.col}>
-            <Text style={styles.label}>Meses</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Ex.: 12"
-              placeholderTextColor={theme === "dark" ? "#777" : "#999"}
-              value={meses}
-              onChangeText={(t) => setMeses(t.replace(/[^0-9]/g, ""))}
-              keyboardType="number-pad"
-            />
-          </View>
-        </View>
-
-        <Pressable style={styles.btn} onPress={simular}>
-          <Text style={styles.btnTxt}>Simular</Text>
-        </Pressable>
-
-        {/* Resultado + Paginação (com rolagem garantida) */}
-        {resultado && (
-          <View style={styles.resultArea}>
-            {/* Card Resumo (autoaltura) */}
-            <View style={styles.card}>
-              <Text style={styles.cardTitle}>Resumo</Text>
-
-              <View style={styles.line}>
-                <Text style={styles.lineLabel}>Produto</Text>
-                <Text style={styles.lineValue}>{produtoSel?.nome}</Text>
-              </View>
-              <View style={styles.line}>
-                <Text style={styles.lineLabel}>Taxa efetiva mensal</Text>
-                <Text style={styles.lineValue}>
-                  {fmtPct(resultado.taxaMensal)}
-                </Text>
-              </View>
-              <View style={styles.line}>
-                <Text style={styles.lineLabel}>Parcela mensal</Text>
-                <Text style={styles.lineValue}>
-                  {fmtMoeda(resultado.parcela)}
-                </Text>
-              </View>
-              <View style={styles.line}>
-                <Text style={styles.lineLabel}>Total com juros</Text>
-                <Text style={styles.lineValue}>
-                  {fmtMoeda(resultado.total)}
-                </Text>
-              </View>
-
-              {/* Controles de página */}
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginTop: 8,
-                  gap: 12,
-                }}
-              >
-                <Pressable
-                  onPress={() => setPage((p) => Math.max(1, p - 1))}
-                  style={[
-                    styles.btn,
-                    { paddingVertical: 10, backgroundColor: "#444", flex: 1 },
-                    page <= 1 && { opacity: 0.5 },
-                  ]}
-                  disabled={page <= 1}
-                >
-                  <Text style={styles.btnTxt}>Anterior</Text>
-                </Pressable>
-
-                <Text
-                  style={{
-                    color: theme === "dark" ? "#fff" : "#000",
-                    fontWeight: "600",
-                  }}
-                >
-                  Página {page} de {totalPages}
-                </Text>
-
-                <Pressable
-                  onPress={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  style={[
-                    styles.btn,
-                    { paddingVertical: 10, flex: 1 },
-                    page >= totalPages && { opacity: 0.5 },
-                  ]}
-                  disabled={page >= totalPages}
-                >
-                  <Text style={styles.btnTxt}>Próxima</Text>
-                </Pressable>
-              </View>
-
-              <Text style={[styles.listHeader, { marginTop: 10 }]}>
-                Memória de cálculo
+            {/* Seleção de produto */}
+            <Text style={styles.label}>Produto</Text>
+            <Pressable
+              style={styles.select}
+              onPress={() => setAbrirModal(true)}
+            >
+              <Text style={styles.selectText}>
+                {produtoSel
+                  ? `${produtoSel.nome} • ${produtoSel.taxaJurosAnual}% a.a. • até ${produtoSel.prazoMaximoMeses}m`
+                  : "Selecionar produto"}
               </Text>
+            </Pressable>
+
+            {/* Valor e Meses */}
+            <View style={styles.row}>
+              <View style={styles.col}>
+                <Text style={styles.label}>Valor (R$)</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Ex.: 10.000"
+                  placeholderTextColor={theme === "dark" ? "#777" : "#999"}
+                  value={valor}
+                  onChangeText={(t) => setValor(t.replace(/[^0-9.,]/g, ""))}
+                  keyboardType="decimal-pad"
+                />
+              </View>
+              <View style={styles.col}>
+                <Text style={styles.label}>Meses</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Ex.: 12"
+                  placeholderTextColor={theme === "dark" ? "#777" : "#999"}
+                  value={meses}
+                  onChangeText={(t) => setMeses(t.replace(/[^0-9]/g, ""))}
+                  keyboardType="number-pad"
+                />
+              </View>
             </View>
 
-            {/* Card rolável ocupa o restante da tela */}
-            <View style={styles.cardScrollable}>
-              <FlatList
-                data={pageItems}
-                keyExtractor={(it) => String(it.mes)}
-                ItemSeparatorComponent={() => <View style={{ height: 6 }} />}
-                renderItem={({ item }) => (
-                  <View style={styles.itemRow}>
-                    <Text style={styles.itemTxt}>Mês {item.mes}</Text>
-                    <Text style={styles.itemTxt}>
-                      Juros: {fmtMoeda(item.juros)}
-                    </Text>
-                    <Text style={styles.itemTxt}>
-                      Amort.: {fmtMoeda(item.amortizacao)}
-                    </Text>
-                    <Text style={styles.itemTxt}>
-                      Saldo: {fmtMoeda(item.saldo)}
+            <Pressable style={styles.btn} onPress={simular}>
+              <Text style={styles.btnTxt}>Simular</Text>
+            </Pressable>
+
+            {/* Resultado + Paginação (com rolagem garantida) */}
+            {resultado && (
+              <View style={styles.resultArea}>
+                {/* Card Resumo */}
+                <View style={styles.card}>
+                  <Text style={styles.cardTitle}>Resumo</Text>
+
+                  <View style={styles.line}>
+                    <Text style={styles.lineLabel}>Produto</Text>
+                    <Text style={styles.lineValue}>{produtoSel?.nome}</Text>
+                  </View>
+                  <View style={styles.line}>
+                    <Text style={styles.lineLabel}>Taxa efetiva mensal</Text>
+                    <Text style={styles.lineValue}>
+                      {fmtPct(resultado.taxaMensal)}
                     </Text>
                   </View>
-                )}
-                style={{ flex: 1 }} // garante altura para rolar
-                contentContainerStyle={{ paddingBottom: 16 }}
-                nestedScrollEnabled
-                scrollEnabled
-                showsVerticalScrollIndicator
-              />
-            </View>
+                  <View style={styles.line}>
+                    <Text style={styles.lineLabel}>Parcela mensal</Text>
+                    <Text style={styles.lineValue}>
+                      {fmtMoeda(resultado.parcela)}
+                    </Text>
+                  </View>
+                  <View style={styles.line}>
+                    <Text style={styles.lineLabel}>Total com juros</Text>
+                    <Text style={styles.lineValue}>
+                      {fmtMoeda(resultado.total)}
+                    </Text>
+                  </View>
+
+                  {/* Controles de página */}
+                  <View style={styles.pageControls}>
+                    <Pressable
+                      onPress={() => setPage((p) => Math.max(1, p - 1))}
+                      style={[
+                        styles.btn,
+                        styles.btnSecondary,
+                        page <= 1 && { opacity: 0.5 },
+                      ]}
+                      disabled={page <= 1}
+                    >
+                      <Text style={styles.btnTxt}>Anterior</Text>
+                    </Pressable>
+
+                    <Text style={styles.pageIndicator}>
+                      Página {page} de {totalPages}
+                    </Text>
+
+                    <Pressable
+                      onPress={() =>
+                        setPage((p) => Math.min(totalPages, p + 1))
+                      }
+                      style={[
+                        styles.btn,
+                        page >= totalPages && { opacity: 0.5 },
+                      ]}
+                      disabled={page >= totalPages}
+                    >
+                      <Text style={styles.btnTxt}>Próxima</Text>
+                    </Pressable>
+                  </View>
+                </View>
+
+                {/* Card rolável ocupa o restante da tela */}
+                <View style={styles.cardScrollable}>
+                  <Text style={[styles.listHeader, { marginTop: 10 }]}>
+                    Memória de cálculo
+                  </Text>
+                  <FlatList
+                    data={pageItems}
+                    keyExtractor={(it) => String(it.mes)}
+                    ItemSeparatorComponent={() => (
+                      <View style={{ height: 6 }} />
+                    )}
+                    renderItem={({ item }) => (
+                      <View style={styles.itemRow}>
+                        <Text style={styles.itemTxt}>Mês {item.mes}</Text>
+                        <Text style={styles.itemTxt}>
+                          Juros: {fmtMoeda(item.juros)}
+                        </Text>
+                        <Text style={styles.itemTxt}>
+                          Amort.: {fmtMoeda(item.amortizacao)}
+                        </Text>
+                        <Text style={styles.itemTxt}>
+                          Saldo: {fmtMoeda(item.saldo)}
+                        </Text>
+                      </View>
+                    )}
+                    style={{ flex: 1 }}
+                    contentContainerStyle={{ paddingBottom: 16 }}
+                    nestedScrollEnabled
+                    scrollEnabled
+                    showsVerticalScrollIndicator
+                  />
+                </View>
+              </View>
+            )}
           </View>
-        )}
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
 
       {/* Modal de seleção de produto (overlay simples) */}
       {abrirModal && (
-        <View style={styles.modalScrim}>
-          <View style={styles.modalBox}>
-            <Pressable
-              style={styles.close}
-              onPress={() => setAbrirModal(false)}
-            >
-              <Text style={styles.closeTxt}>Fechar</Text>
-            </Pressable>
+        <View style={styles.modalScrim} onTouchEnd={() => setAbrirModal(false)}>
+          {/* Toque dentro do box não fecha */}
+          <View
+            style={styles.modalBox}
+            onStartShouldSetResponder={() => true}
+            onTouchEnd={(e) => e.stopPropagation()}
+          >
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Selecionar produto</Text>
+              <Pressable
+                style={styles.close}
+                onPress={() => setAbrirModal(false)}
+              >
+                <Text style={styles.closeTxt}>Fechar</Text>
+              </Pressable>
+            </View>
 
+            {/* Lista com altura limitada e rolagem */}
             <FlatList
               data={produtos}
               keyExtractor={(p) => String(p.id)}
@@ -327,6 +331,11 @@ export default function Simulacao() {
                 </Pressable>
               )}
               ItemSeparatorComponent={() => <View style={{ height: 4 }} />}
+              showsVerticalScrollIndicator
+              keyboardShouldPersistTaps="handled"
+              nestedScrollEnabled
+              style={styles.modalList}
+              contentContainerStyle={{ paddingBottom: 8 }}
             />
           </View>
         </View>
