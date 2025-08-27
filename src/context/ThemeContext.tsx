@@ -9,7 +9,7 @@ import React, {
 export type AppTheme = "light" | "dark";
 
 type ThemeCtx = { theme: AppTheme; toggleTheme: () => void };
-const ThemeContext = createContext<ThemeCtx>({
+export const ThemeContext = createContext<ThemeCtx>({
   theme: "light",
   toggleTheme: () => {},
 });
