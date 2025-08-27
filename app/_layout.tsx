@@ -1,4 +1,3 @@
-// app/_layout.tsx
 import { Stack } from "expo-router";
 import {
   ThemeProvider as NavThemeProvider,
@@ -17,12 +16,10 @@ function LayoutInner() {
     <NavThemeProvider value={navTheme}>
       <StatusBar style={theme === "dark" ? "light" : "dark"} />
       <Stack screenOptions={{ headerShadowVisible: false }}>
-        {/* deixe como já estava no seu projeto */}
         <Stack.Screen name="login" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>
 
-      {/* Botão flutuante global (todas as telas) */}
       <ThemeToggle />
     </NavThemeProvider>
   );

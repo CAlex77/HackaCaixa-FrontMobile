@@ -249,14 +249,12 @@ export default function Simulacao() {
                     Memória de cálculo
                   </Text>
 
-                  {/* 🔸 rolagem horizontal só da tabela */}
                   <ScrollView
                     horizontal
                     showsHorizontalScrollIndicator
                     contentContainerStyle={styles.tableScrollContent}
                   >
                     <View style={styles.table}>
-                      {/* Cabeçalho */}
                       <View style={[styles.tr, styles.trHeader]}>
                         <Text style={[styles.th, styles.colMes]}>Mês</Text>
                         <Text
@@ -281,7 +279,6 @@ export default function Simulacao() {
                         </Text>
                       </View>
 
-                      {/* Linhas */}
                       {pageItems.map((item) => (
                         <View key={item.mes} style={styles.tr}>
                           <Text style={[styles.td, styles.colMes]}>

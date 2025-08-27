@@ -1,4 +1,3 @@
-// app/login.tsx
 import { SafeAreaView, View, Text, Image, Pressable } from "react-native";
 import { router } from "expo-router";
 import { loginStyles as styles } from "./styles/login.styles";
@@ -10,7 +9,7 @@ export default function LoginScreen() {
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
         <Image
-          source={require("../assets/images/bank-logo.png")}
+          source={require("../assets/images/466-4667744_caixa-econmica-federal-clipart.png")}
           style={styles.logo}
           resizeMode="contain"
         />

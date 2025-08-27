@@ -7,10 +7,9 @@ export const getSimularStyles = (theme: AppTheme) =>
   StyleSheet.create({
     safe: { flex: 1, backgroundColor: theme === "dark" ? "#000" : "#fff" },
 
-    // Área rolável principal
     scrollContainer: {
       padding: 16,
-      paddingBottom: 24, // espaço p/ teclado / barras
+      paddingBottom: 24, 
     },
 
     container: {
@@ -27,7 +26,6 @@ export const getSimularStyles = (theme: AppTheme) =>
       marginTop: 8,
     },
 
-    // 🔻 área flexível para o resultado
     resultArea: { flexGrow: 1, gap: 10 },
 
     title: {
@@ -69,7 +67,6 @@ export const getSimularStyles = (theme: AppTheme) =>
     btnTxt: { color: "#fff", fontWeight: "700", fontSize: 16 },
     error: { color: "#ff5a5f", fontSize: 12, fontWeight: "600" },
 
-    // Cards
     card: {
       borderRadius: 12,
       borderWidth: 1,
@@ -78,24 +75,18 @@ export const getSimularStyles = (theme: AppTheme) =>
       padding: 12,
     },
     cardScrollable: {
-      // minHeight: 160,
-      // maxHeight: H * 0.45, // impede ficar gigante em telas menores
       borderRadius: 12,
       borderWidth: 1,
       borderColor: theme === "dark" ? "#333" : "#e5e5e5",
       backgroundColor: theme === "dark" ? "#111" : "#fafafa",
       padding: 12,
     },
-    // Para o container de rolagem horizontal
     tableScrollContent: {
-      // opcional, só para dar respiro à direita
       paddingRight: 8,
     },
 
-    // Tabela "manual" (flex)
     table: {
-      // largura mínima para forçar rolagem horizontal quando a tela for estreita
-      minWidth: 700, // ajuste conforme a quantidade de colunas/labels
+      minWidth: 700,
     },
 
     tr: {
@@ -116,9 +107,9 @@ export const getSimularStyles = (theme: AppTheme) =>
       fontWeight: "700",
       color: theme === "dark" ? "#fff" : "#000",
       paddingHorizontal: 8,
-      includeFontPadding: false, // ajuda no Android
+      includeFontPadding: false,
       textAlignVertical: "center",
-      lineHeight: 20, // mesmo lineHeight nas células
+      lineHeight: 20,
     },
 
     td: {
@@ -129,13 +120,10 @@ export const getSimularStyles = (theme: AppTheme) =>
       lineHeight: 20,
     },
 
-    // Larguras por coluna (para “tabelar” melhor no horizontal)
     colMes: { width: 100 },
     colValor: { width: 140 },
 
-    // Alinhamento numérico à direita
     thNum: { textAlign: "right" },
-    // alinhar números à direita nas células
     num: { textAlign: "right" },
 
     cardTitle: {
@@ -176,7 +164,6 @@ export const getSimularStyles = (theme: AppTheme) =>
       fontWeight: "600",
     },
 
-    // Modal
     modalScrim: {
       ...StyleSheet.absoluteFillObject,
       backgroundColor: "rgba(0,0,0,0.45)",
@@ -187,13 +174,13 @@ export const getSimularStyles = (theme: AppTheme) =>
     modalBox: {
       width: "100%",
       maxWidth: 420,
-      maxHeight: H * 0.6, // <= controla altura da janela
+      maxHeight: H * 0.6,
       borderRadius: 12,
       padding: 12,
       backgroundColor: theme === "dark" ? "#111" : "#fff",
       borderWidth: 1,
       borderColor: theme === "dark" ? "#333" : "#e5e5e5",
-      overflow: "hidden", // garante clip da lista
+      overflow: "hidden",
       gap: 8,
     },
     modalHeader: {
@@ -208,8 +195,8 @@ export const getSimularStyles = (theme: AppTheme) =>
       color: theme === "dark" ? "#fff" : "#000",
     },
     modalList: {
-      flexGrow: 0, // não tenta ocupar infinito
-      maxHeight: H * 0.7, // lista rola dentro do modal
+      flexGrow: 0,
+      maxHeight: H * 0.7,
     },
     modalItem: {
       paddingVertical: 12,

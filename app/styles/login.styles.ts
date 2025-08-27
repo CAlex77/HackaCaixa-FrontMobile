@@ -1,10 +1,10 @@
-// app/styles/login.styles.ts
 import { StyleSheet } from "react-native";
 
 export const loginStyles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "#8A05BE",
+    // backgroundColor: "#8A05BE", um pequeno easter egg kkkkkk
+    backgroundColor: "#0070af",
   },
   container: {
     flex: 1,
@@ -12,8 +12,8 @@ export const loginStyles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 24,
     width: "100%",
-    maxWidth: 420, // 🔹 limita largura no web
-    alignSelf: "center", // 🔹 centraliza no web
+    maxWidth: 420, 
+    alignSelf: "center",
     gap: 16,
   },
   logo: {
@@ -27,7 +27,7 @@ export const loginStyles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 24,
     borderRadius: 30,
-    width: "100%", // 🔹 ocupa a largura do container (limitada pelo maxWidth)
+    width: "100%",
     alignItems: "center",
   },
   primaryText: {
