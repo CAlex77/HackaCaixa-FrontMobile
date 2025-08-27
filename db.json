@@ -71,6 +71,12 @@
       "nome": "Teste Celular 3",
       "taxaJurosAnual": 12,
       "prazoMaximoMeses": 58
+    },
+    {
+      "id": "80e7",
+      "nome": "Teste Telegram",
+      "taxaJurosAnual": 12,
+      "prazoMaximoMeses": 48
     }
   ]
 }

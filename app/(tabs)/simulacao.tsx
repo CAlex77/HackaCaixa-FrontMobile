@@ -28,20 +28,16 @@ export default function Simulacao() {
   const { theme } = useThemeCtx();
   const styles = getSimularStyles(theme);
 
-  // Produtos (GET /produtos)
   const [loadingProdutos, setLoadingProdutos] = useState(true);
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [erroProdutos, setErroProdutos] = useState<string | null>(null);
 
-  // Form
   const [produtoSel, setProdutoSel] = useState<Produto | null>(null);
   const [valor, setValor] = useState<string>("");
   const [meses, setMeses] = useState<string>("");
 
-  // Modal simples de seleção (inline)
   const [abrirModal, setAbrirModal] = useState(false);
 
-  // Resultado
   const [resultado, setResultado] = useState<{
     taxaMensal: number;
     parcela: number;
@@ -49,7 +45,6 @@ export default function Simulacao() {
     schedule: ParcelaLinha[];
   } | null>(null);
 
-  // Paginação
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -140,7 +135,6 @@ export default function Simulacao() {
         behavior={Platform.OS === "ios" ? "padding" : undefined}
         style={{ flex: 1 }}
       >
-        {/* Scroll geral para telas pequenas */}
         <ScrollView
           style={{ flex: 1 }}
           contentContainerStyle={styles.scrollContainer}
@@ -149,7 +143,6 @@ export default function Simulacao() {
           <View style={styles.container}>
             <Text style={styles.title}>Simular Empréstimo</Text>
 
-            {/* Seleção de produto */}
             <Text style={styles.label}>Produto</Text>
             <Pressable
               style={styles.select}
@@ -162,7 +155,6 @@ export default function Simulacao() {
               </Text>
             </Pressable>
 
-            {/* Valor e Meses */}
             <View style={styles.row}>
               <View style={styles.col}>
                 <Text style={styles.label}>Valor (R$)</Text>
@@ -192,10 +184,8 @@ export default function Simulacao() {
               <Text style={styles.btnTxt}>Simular</Text>
             </Pressable>
 
-            {/* Resultado + Paginação (com rolagem garantida) */}
             {resultado && (
               <View style={styles.resultArea}>
-                {/* Card Resumo */}
                 <View style={styles.card}>
                   <Text style={styles.cardTitle}>Resumo</Text>
 
@@ -222,7 +212,6 @@ export default function Simulacao() {
                     </Text>
                   </View>
 
-                  {/* Controles de página */}
                   <View style={styles.pageControls}>
                     <Pressable
                       onPress={() => setPage((p) => Math.max(1, p - 1))}
@@ -255,37 +244,75 @@ export default function Simulacao() {
                   </View>
                 </View>
 
-                {/* Card rolável ocupa o restante da tela */}
                 <View style={styles.cardScrollable}>
                   <Text style={[styles.listHeader, { marginTop: 10 }]}>
                     Memória de cálculo
                   </Text>
-                  <FlatList
-                    data={pageItems}
-                    keyExtractor={(it) => String(it.mes)}
-                    ItemSeparatorComponent={() => (
-                      <View style={{ height: 6 }} />
-                    )}
-                    renderItem={({ item }) => (
-                      <View style={styles.itemRow}>
-                        <Text style={styles.itemTxt}>Mês {item.mes}</Text>
-                        <Text style={styles.itemTxt}>
-                          Juros: {fmtMoeda(item.juros)}
+
+                  {/* 🔸 rolagem horizontal só da tabela */}
+                  <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator
+                    contentContainerStyle={styles.tableScrollContent}
+                  >
+                    <View style={styles.table}>
+                      {/* Cabeçalho */}
+                      <View style={[styles.tr, styles.trHeader]}>
+                        <Text style={[styles.th, styles.colMes]}>Mês</Text>
+                        <Text
+                          style={[styles.th, styles.colValor, styles.thNum]}
+                        >
+                          Parcela
                         </Text>
-                        <Text style={styles.itemTxt}>
-                          Amort.: {fmtMoeda(item.amortizacao)}
+                        <Text
+                          style={[styles.th, styles.colValor, styles.thNum]}
+                        >
+                          Juros
                         </Text>
-                        <Text style={styles.itemTxt}>
-                          Saldo: {fmtMoeda(item.saldo)}
+                        <Text
+                          style={[styles.th, styles.colValor, styles.thNum]}
+                        >
+                          Amortização
+                        </Text>
+                        <Text
+                          style={[styles.th, styles.colValor, styles.thNum]}
+                        >
+                          Saldo
                         </Text>
                       </View>
-                    )}
-                    style={{ flex: 1 }}
-                    contentContainerStyle={{ paddingBottom: 16 }}
-                    nestedScrollEnabled
-                    scrollEnabled
-                    showsVerticalScrollIndicator
-                  />
+
+                      {/* Linhas */}
+                      {pageItems.map((item) => (
+                        <View key={item.mes} style={styles.tr}>
+                          <Text style={[styles.td, styles.colMes]}>
+                            Mês {item.mes}
+                          </Text>
+                          <Text
+                            style={[styles.td, styles.colValor, styles.num]}
+                          >
+                            {fmtMoeda(
+                              item.parcela ?? item.juros + item.amortizacao
+                            )}
+                          </Text>
+                          <Text
+                            style={[styles.td, styles.colValor, styles.num]}
+                          >
+                            {fmtMoeda(item.juros)}
+                          </Text>
+                          <Text
+                            style={[styles.td, styles.colValor, styles.num]}
+                          >
+                            {fmtMoeda(item.amortizacao)}
+                          </Text>
+                          <Text
+                            style={[styles.td, styles.colValor, styles.num]}
+                          >
+                            {fmtMoeda(item.saldo)}
+                          </Text>
+                        </View>
+                      ))}
+                    </View>
+                  </ScrollView>
                 </View>
               </View>
             )}
@@ -293,10 +320,8 @@ export default function Simulacao() {
         </ScrollView>
       </KeyboardAvoidingView>
 
-      {/* Modal de seleção de produto (overlay simples) */}
       {abrirModal && (
         <View style={styles.modalScrim} onTouchEnd={() => setAbrirModal(false)}>
-          {/* Toque dentro do box não fecha */}
           <View
             style={styles.modalBox}
             onStartShouldSetResponder={() => true}
@@ -312,7 +337,6 @@ export default function Simulacao() {
               </Pressable>
             </View>
 
-            {/* Lista com altura limitada e rolagem */}
             <FlatList
               data={produtos}
               keyExtractor={(p) => String(p.id)}

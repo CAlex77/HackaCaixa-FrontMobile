@@ -1,4 +1,3 @@
-// app/(tabs)/listar.tsx
 import { useEffect, useState, useCallback } from "react";
 import {
   SafeAreaView,

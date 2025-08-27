@@ -1,4 +1,3 @@
-// app/(tabs)/_layout.tsx
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -48,7 +47,6 @@ export default function TabsLayout() {
         }}
       />
 
-      {/* Se quiser esconder o index (login), pode deixar href: null */}
       <Tabs.Screen
         name="index"
         options={{

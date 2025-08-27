@@ -20,8 +20,8 @@ export default function NovoProduto() {
   const styles = getFormStyles(theme);
 
   const [nome, setNome] = useState("");
-  const [taxa, setTaxa] = useState<string>(""); // string para facilitar input
-  const [prazo, setPrazo] = useState<string>(""); // idem
+  const [taxa, setTaxa] = useState<string>("");
+  const [prazo, setPrazo] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{
     nome?: string;

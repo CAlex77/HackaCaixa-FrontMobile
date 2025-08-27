@@ -78,14 +78,65 @@ export const getSimularStyles = (theme: AppTheme) =>
       padding: 12,
     },
     cardScrollable: {
-      minHeight: 160,
-      maxHeight: H * 0.45, // impede ficar gigante em telas menores
+      // minHeight: 160,
+      // maxHeight: H * 0.45, // impede ficar gigante em telas menores
       borderRadius: 12,
       borderWidth: 1,
       borderColor: theme === "dark" ? "#333" : "#e5e5e5",
       backgroundColor: theme === "dark" ? "#111" : "#fafafa",
       padding: 12,
     },
+    // Para o container de rolagem horizontal
+    tableScrollContent: {
+      // opcional, só para dar respiro à direita
+      paddingRight: 8,
+    },
+
+    // Tabela "manual" (flex)
+    table: {
+      // largura mínima para forçar rolagem horizontal quando a tela for estreita
+      minWidth: 700, // ajuste conforme a quantidade de colunas/labels
+    },
+
+    tr: {
+      flexDirection: "row",
+      alignItems: "center",
+      borderBottomWidth: 1,
+      borderBottomColor: theme === "dark" ? "#222" : "#eee",
+      paddingVertical: 10,
+    },
+
+    trHeader: {
+      borderBottomWidth: 1.5,
+      borderBottomColor: theme === "dark" ? "#333" : "#ddd",
+      backgroundColor: theme === "dark" ? "#0d0d0d" : "#f3f3f3",
+    },
+
+    th: {
+      fontWeight: "700",
+      color: theme === "dark" ? "#fff" : "#000",
+      paddingHorizontal: 8,
+      includeFontPadding: false, // ajuda no Android
+      textAlignVertical: "center",
+      lineHeight: 20, // mesmo lineHeight nas células
+    },
+
+    td: {
+      color: theme === "dark" ? "#ddd" : "#333",
+      paddingHorizontal: 8,
+      includeFontPadding: false,
+      textAlignVertical: "center",
+      lineHeight: 20,
+    },
+
+    // Larguras por coluna (para “tabelar” melhor no horizontal)
+    colMes: { width: 100 },
+    colValor: { width: 140 },
+
+    // Alinhamento numérico à direita
+    thNum: { textAlign: "right" },
+    // alinhar números à direita nas células
+    num: { textAlign: "right" },
 
     cardTitle: {
       fontWeight: "700",
